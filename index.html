@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control IoT</title>
+    <script
+      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-firestore.js"></script>
+    <script src="js/init.js"></script>
+    <link href="css/estilos.css" rel="stylesheet">
+    <script type="module" src="cmp/mi-footer.js"></script>
+  </head>
+  <body>
+    <div class="contenido">
+      <h1>Control IoT</h1>
+      <p><a href="dispositivo.html" target="_blank">Ver dispositivo.</a></p>
+      <p><a href="historial.html">Ver historial.</a></p>
+      <p><label>Entrada<meter id=ctrlEntrada min="0" max="10"></meter></label>
+      </p>
+      <p>
+        <label><input id=ctrlSalida type="checkbox"> Salida</label>
+      </p>
+      <mi-footer></mi-footer>
+    </div>
+    <script type="module">
+      import { FábricaMóvil } from "/js/FabricaMovil.js";
+      import { InfoValor } from "/js/InfoValor.js";
+      import { muestraError } from "/lib/util.js";
+      const ID = "iot1";
+      const ctrlMóvil = FábricaMóvil.instancia.ctrlMóvil;
+      ctrlSalida.addEventListener("click", modificaSalida);
+      setup();
+      async function setup() {
+        try {
+          const valorSalida =
+            await ctrlMóvil.setup(ID, muestraError, muestraEntrada);
+          ctrlSalida.checked = Boolean(valorSalida && valorSalida.valor);
+        } catch (error) {
+          muestraError(error);
+        }
+      }
+      function muestraEntrada(infoValor) {
+        if (infoValor) {
+          ctrlEntrada.value = infoValor.valor;
+        } else {
+          ctrlEntrada.value = 0;
+        }
+      }
+      async function modificaSalida() {
+        try {
+          await ctrlMóvil.modificaSalida(new InfoValor({
+            id: ID,
+            valor: ctrlSalida.checked ? 1 : 0
+          }));
+        } catch (error) {
+          muestraError(error);
+        }
+      }
+    </script>
+  </body>
+</html>

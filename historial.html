@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial IoT</title>
+    <script
+      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-firestore.js"></script>
+    <script src="js/init.js"></script>
+    <link href="css/estilos.css" rel="stylesheet">
+    <script type="module" src="cmp/mi-footer.js"></script>
+  </head>
+  <body>
+    <!-- <h1>Historial IoT</h1>
+    <p><a href="index.html">Ver Control IoT.</a></p> -->
+    <table>
+      <thead>
+        <tr>
+          <th>Dispositivo</th>
+          <th>Valor</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <!-- <mi-footer></mi-footer> -->
+    <script type="module">
+      import { FábricaMóvil } from "/js/FabricaMovil.js";
+      import { InfoValor } from "/js/InfoValor.js";
+      import { muestraError } from "/lib/util.js";
+      const ctrlMóvil = FábricaMóvil.instancia.ctrlMóvil;
+      setup();
+      async function setup() {
+        try {
+          const registros = await ctrlMóvil.consultaHistorial();
+          tbody.innerHTML = registros.map(h => /* html */
+            `<tr>
+              <td>${h.dispositivo}</td>
+              <td>${h.valor}</td>
+              <td>${h.timestamp.toDate().toJSON()}</td>
+            </tr>`).join("");
+        } catch (error) {
+          muestraError(error);
+        }
+      }
+    </script>
+  </body>
+</html>

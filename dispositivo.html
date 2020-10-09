@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispositivo IoT</title>
+  </head>
+  <body>
+    <h1>Dispositivo IoT</h1>
+    <p><a href="index.html" target="_blank">Ver móvil.</a></p>
+    <p>
+      <label>
+        Entrada
+        <input id="ctrlEntrada" type="range" min="0" max="10">
+      </label>
+    </p>
+    <p>
+      <label>
+        <input id=sondeaSalida type="checkbox" checked>
+        Sondea Salida
+      </label>
+    </p>
+    <p>
+      <label>
+        Salida
+        <output id="ctrlSalida">0</output>
+      </label>
+    </p>
+    <p><output id="iotError"></output></p>
+    <script type="module">
+      import {
+        envíaJson, getTimestamp, urlDeColección, urlDeDocumento, espera
+      } from "/dispositivo/utilIoT.js";
+      const INTERVALO_EN_MILIS = 1000;
+      const ID_PROYECTO = "gilpgiotx";
+      const ID = "iot1";
+      const URL_ENTRADA = urlDeDocumento(ID_PROYECTO, "ENTRADA", ID);
+      const URL_SALIDA = urlDeDocumento(ID_PROYECTO, "SALIDA", ID);
+      const URL_HISTORIAL = urlDeColección(ID_PROYECTO, "HISTORIAL");
+      const MÉTODO_AGREGA = "POST";
+      const MÉTODO_CAMBIOS = "PATCH";
+      let entrada = 0;
+      async function setup() {
+        await muestraLaSalidaDelServidor();
+        await envíaLaEntrada(true);
+      }
+      async function loop() {
+        await muestraLaSalidaDelServidor();
+        await envíaLaEntrada(false);
+      }
+      async function muestraLaSalidaDelServidor() {
+        try {
+          if (sondeaSalida.checked) {
+            const salida = await buscaLaSalidaEnElServidor();
+            muestraSalida(salida);
+          }
+        } catch (error) {
+          muestraSalida(0);
+          muestraError(error);
+        }
+      }
+      async function buscaLaSalidaEnElServidor() {
+        const resp = await fetch(URL_SALIDA);
+        if (resp.ok) {
+          const json = await resp.json();
+          const valor = json.fields.VALOR && json.fields.VALOR.integerValue;
+          return valor || "0";
+        } else {
+          throw new Error(resp.statusText);
+        }
+      }
+      async function envíaLaEntrada(forzosa) {
+        try {
+          const nuevaEntrada = recuperaEntrada();
+          if (forzosa || entrada != nuevaEntrada) {
+            const valor = { fields: { VALOR: { integerValue: nuevaEntrada } } };
+            const historia = {
+              fields: {
+                DISP_ID: { stringValue: ID },
+                HIST_TS: { timestampValue: getTimestamp() },
+                VALOR: { integerValue: nuevaEntrada }
+              }
+            };
+            const jsonValor = JSON.stringify(valor);
+            const jsonHistoria = JSON.stringify(historia);
+            await envíaJson(URL_ENTRADA, MÉTODO_CAMBIOS, jsonValor);
+            await envíaJson(URL_HISTORIAL, MÉTODO_AGREGA, jsonHistoria);
+            entrada = nuevaEntrada;
+          }
+        } catch (e) {
+          muestraError(e);
+        }
+      }
+      function muestraSalida(valor) {
+        ctrlSalida.value = valor;
+      }
+      function recuperaEntrada() {
+        return ctrlEntrada.valueAsNumber;
+      }
+      function muestraError(error) {
+        console.error(error);
+        iotError.value = error.message;
+      }
+      async function programa() {
+        await setup();
+        for(;;) {
+          await espera(INTERVALO_EN_MILIS);
+          await loop();
+        }
+      }
+      programa();
+    </script>
+  </body>
+</html>

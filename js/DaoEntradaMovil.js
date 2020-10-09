@@ -6,17 +6,17 @@ export class DaoEntradaMóvil {
   constructor(firestore) {
     this._colección = firestore.collection("ENTRADA");
   }
-  /** @param {string} id
+  /** @param {string} idDisp
    * @param {(error: Error) => void} callbackError
    * @param {(modelo: InfoValor) => void} callback */
-  lee(id, callbackError, callback) {
+  lee(idDisp, callbackError, callback) {
     /* Pide todos los documentos de la colección "PRIVILEGIO". */
-    this._colección.doc(id).onSnapshot(
+    this._colección.doc(idDisp).onSnapshot(
       docSnapshot => callback(leeInfoValor(docSnapshot)),
       /** @param {Error} error */
       error => {
         callbackError(error);
-        this.lee(id, callbackError, callback);
+        this.lee(idDisp, callbackError, callback);
       }
     );
   }

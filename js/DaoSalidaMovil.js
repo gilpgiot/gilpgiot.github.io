@@ -13,10 +13,11 @@ export class DaoSalidaMóvil {
     await this._colección.doc(modelo.id).set({ VALOR: modelo.valor });
   }
 
-  /** @param {string} id
+  /** @param {string} idDisp
    * @returns {Promise<InfoValor>} */
-  async busca(id) {
-    let doc = id ? await this._colección.doc(id).get() : { exists: false };
+  async busca(idDisp) {
+    let doc = idDisp ? await this._colección.doc(idDisp).get()
+      : { exists: false };
     return leeInfoValor(doc);
   }
 }

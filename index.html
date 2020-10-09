@@ -17,10 +17,10 @@
       <h1>Control IoT</h1>
       <p><a href="dispositivo.html" target="_blank">Ver dispositivo.</a></p>
       <p><a href="historial.html">Ver historial.</a></p>
-      <p><label>Entrada<meter id=ctrlEntrada min="0" max="10"></meter></label>
+      <p><label>Entrada<meter id=ctEntrada min="0" max="10"></meter></label>
       </p>
       <p>
-        <label><input id=ctrlSalida type="checkbox"> Salida</label>
+        <label><input id=ctSalida type="checkbox"> Salida</label>
       </p>
       <mi-footer></mi-footer>
     </div>
@@ -28,32 +28,29 @@
       import { FábricaMóvil } from "/js/FabricaMovil.js";
       import { InfoValor } from "/js/InfoValor.js";
       import { muestraError } from "/lib/util.js";
-      const ID = "iot1";
-      const ctrlMóvil = FábricaMóvil.instancia.ctrlMóvil;
-      ctrlSalida.addEventListener("click", modificaSalida);
+      const fábrica = FábricaMóvil.instancia(muestraError, muestraEntrada);
+      const ctrlMóvil = fábrica.ctrlMóvil;
+      ctSalida.addEventListener("click", modificaSalida);
       setup();
       async function setup() {
         try {
-          const valorSalida =
-            await ctrlMóvil.setup(ID, muestraError, muestraEntrada);
-          ctrlSalida.checked = Boolean(valorSalida && valorSalida.valor);
+          const valorSalida = await ctrlMóvil.setup();
+          ctSalida.checked = Boolean(valorSalida && valorSalida.valor);
         } catch (error) {
           muestraError(error);
         }
       }
       function muestraEntrada(infoValor) {
         if (infoValor) {
-          ctrlEntrada.value = infoValor.valor;
+          ctEntrada.value = infoValor.valor;
         } else {
-          ctrlEntrada.value = 0;
+          ctEntrada.value = 0;
         }
       }
       async function modificaSalida() {
         try {
-          await ctrlMóvil.modificaSalida(new InfoValor({
-            id: ID,
-            valor: ctrlSalida.checked ? 1 : 0
-          }));
+          const valor = ctSalida.checked ? 1 : 0;
+          await ctrlMóvil.modificaSalida(valor);
         } catch (error) {
           muestraError(error);
         }

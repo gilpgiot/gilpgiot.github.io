@@ -11,99 +11,51 @@
     <p>
       <label>
         Entrada
-        <input id="ctrlEntrada" type="range" min="0" max="10">
+        <input id="ctEntrada" type="range" min="0" max="10">
       </label>
     </p>
     <p>
       <label>
-        <input id=sondeaSalida type="checkbox" checked>
+        <input id=ctSondeaSalida type="checkbox" checked>
         Sondea Salida
       </label>
     </p>
     <p>
       <label>
         Salida
-        <output id="ctrlSalida"></output>
+        <output id="ctSalida"></output>
       </label>
     </p>
     <p><output id="iotError"></output></p>
     <script type="module">
-      import {
-        envíaJson, getTimestamp, urlDeColección, urlDeDocumento, espera
-      } from "/dispositivo/utilIoT.js";
+      import { FábricaDispositivo } from "/dispositivo/FabricaDispositivo.js";
+      import { espera } from "/dispositivo/utilIoT.js";
       const INTERVALO_EN_MILIS = 1000;
-      const ID_PROYECTO = "gilpgiotx";
-      const ID = "iot1";
-      const URL_ENTRADA = urlDeDocumento(ID_PROYECTO, "ENTRADA", ID);
-      const URL_SALIDA = urlDeDocumento(ID_PROYECTO, "SALIDA", ID);
-      const URL_HISTORIAL = urlDeColección(ID_PROYECTO, "HISTORIAL");
-      const MÉTODO_AGREGA = "POST";
-      const MÉTODO_CAMBIOS = "PATCH";
-      let entrada = 0;
-      async function setup() {
-        await muestraLaSalidaDelServidor();
-        await envíaLaEntrada(true);
-      }
-      async function loop() {
-        await muestraLaSalidaDelServidor();
-        await envíaLaEntrada(false);
-      }
-      async function muestraLaSalidaDelServidor() {
-        try {
-          if (sondeaSalida.checked) {
-            const salida = await buscaLaSalidaEnElServidor();
-            muestraSalida(salida);
-          }
-        } catch (error) {
-          muestraSalida(0);
-          muestraError(error);
-        }
-      }
-      async function buscaLaSalidaEnElServidor() {
-        const resp = await fetch(URL_SALIDA);
-        if (resp.ok) {
-          const json = await resp.json();
-          const valor = json.fields.VALOR && json.fields.VALOR.integerValue;
-          return valor || "0";
-        } else {
-          throw new Error(resp.statusText);
-        }
-      }
-      async function envíaLaEntrada(forzosa) {
-        try {
-          const nuevaEntrada = recuperaEntrada();
-          if (forzosa || entrada != nuevaEntrada) {
-            const valor = { fields: { VALOR: { integerValue: nuevaEntrada } } };
-            const historia = {
-              fields: {
-                DISP_ID: { stringValue: ID },
-                HIST_TS: { timestampValue: getTimestamp() },
-                VALOR: { integerValue: nuevaEntrada }
-              }
-            };
-            const jsonValor = JSON.stringify(valor);
-            const jsonHistoria = JSON.stringify(historia);
-            await envíaJson(URL_ENTRADA, MÉTODO_CAMBIOS, jsonValor);
-            await envíaJson(URL_HISTORIAL, MÉTODO_AGREGA, jsonHistoria);
-            entrada = nuevaEntrada;
-          }
-        } catch (e) {
-          muestraError(e);
-        }
+      function sondeaSalida() {
+        return ctSondeaSalida.checked;
       }
       function muestraSalida(valor) {
-        ctrlSalida.value = valor;
+        ctSalida.value = valor;
       }
       function recuperaEntrada() {
-        return ctrlEntrada.valueAsNumber;
+        return ctEntrada.valueAsNumber;
       }
       function muestraError(error) {
         console.error(error);
         iotError.value = error.message;
       }
+      const fábrica = FábricaDispositivo.instancia(sondeaSalida,
+        muestraSalida, recuperaEntrada, muestraError);
+      const ctrlDispositivo = fábrica.ctrlDispositivo;
+      async function setup() {
+        await ctrlDispositivo.setup();
+      }
+      async function loop() {
+        await ctrlDispositivo.loop();
+      }
       async function programa() {
         await setup();
-        for(;;) {
+        for (; ;) {
           await espera(INTERVALO_EN_MILIS);
           await loop();
         }

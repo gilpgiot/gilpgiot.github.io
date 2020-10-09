@@ -28,13 +28,13 @@
     <!-- <mi-footer></mi-footer> -->
     <script type="module">
       import { FábricaMóvil } from "/js/FabricaMovil.js";
-      import { InfoValor } from "/js/InfoValor.js";
       import { muestraError } from "/lib/util.js";
-      const ctrlMóvil = FábricaMóvil.instancia.ctrlMóvil;
+      const fábrica = FábricaMóvil.instancia(null, null);
+      const ctrlHistorial = fábrica.ctrlHistorial;
       setup();
       async function setup() {
         try {
-          const registros = await ctrlMóvil.consultaHistorial();
+          const registros = await ctrlHistorial.consultaHistorial();
           tbody.innerHTML = registros.map(h => /* html */
             `<tr>
               <td>${h.dispositivo}</td>

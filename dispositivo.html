@@ -4,29 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispositivo IoT</title>
+    <link href="css/estilos.css" rel="stylesheet">
+    <script type="module" src="cmp/mi-footer.js"></script>
   </head>
   <body>
-    <h1>Dispositivo IoT</h1>
-    <p><a href="index.html" target="_blank">Ver móvil.</a></p>
-    <p>
-      <label>
-        Entrada
-        <input id="ctEntrada" type="range" min="0" max="10">
-      </label>
-    </p>
-    <p>
-      <label>
-        <input id=ctSondeaSalida type="checkbox" checked>
-        Sondea Salida
-      </label>
-    </p>
-    <p>
-      <label>
-        Salida
-        <output id="ctSalida"></output>
-      </label>
-    </p>
-    <p><output id="iotError"></output></p>
+    <div class="contenido">
+      <h1>Dispositivo IoT</h1>
+      <p><a href="index.html" target="_blank">Ver móvil.</a></p>
+      <p>
+        <label>
+          Dispositivo
+          <output id="ctDispositivo"></output>
+        </label>
+      </p>
+      <p>
+        <label>
+          Entrada
+          <input id="ctEntrada" type="range" min="0" max="10">
+        </label>
+      </p>
+      <p>
+        <label>
+          <input id=ctSondeaSalida type="checkbox" checked>
+          Sondea Salida
+        </label>
+      </p>
+      <p>
+        <label>
+          Salida
+          <output id="ctSalida"></output>
+        </label>
+      </p>
+      <p><output id="iotError"></output></p>
+      <mi-footer></mi-footer>
+    </div>
     <script type="module">
       import { FábricaDispositivo } from "/dispositivo/FabricaDispositivo.js";
       import { espera } from "/dispositivo/utilIoT.js";
@@ -35,7 +46,7 @@
         return ctSondeaSalida.checked;
       }
       function muestraSalida(valor) {
-        ctSalida.value = valor;
+        ctSalida.value = valor || "0";
       }
       function recuperaEntrada() {
         return ctEntrada.valueAsNumber;
@@ -44,9 +55,11 @@
         console.error(error);
         iotError.value = error.message;
       }
-      const fábrica = FábricaDispositivo.instancia(sondeaSalida,
+      const idDisp = prompt("Identificador del Dispositivo", "iot1");
+      const fábrica = FábricaDispositivo.instancia(idDisp, sondeaSalida,
         muestraSalida, recuperaEntrada, muestraError);
       const ctrlDispositivo = fábrica.ctrlDispositivo;
+      ctDispositivo.value = idDisp;
       async function setup() {
         await ctrlDispositivo.setup();
       }

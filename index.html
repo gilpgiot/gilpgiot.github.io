@@ -17,7 +17,17 @@
       <h1>Control IoT</h1>
       <p><a href="dispositivo.html" target="_blank">Ver dispositivo.</a></p>
       <p><a href="historial.html">Ver historial.</a></p>
-      <p><label>Entrada<meter id=ctEntrada min="0" max="10"></meter></label>
+      <p>
+        <label>
+          Dispositivo
+          <output id="ctDispositivo"></output>
+        </label>
+      </p>
+      <p>
+        <label>
+          Entrada
+          <meter id=ctEntrada min="0" max="10"></meter>
+        </label>
       </p>
       <p>
         <label><input id=ctSalida type="checkbox"> Salida</label>
@@ -28,9 +38,12 @@
       import { FábricaMóvil } from "/js/FabricaMovil.js";
       import { InfoValor } from "/js/InfoValor.js";
       import { muestraError } from "/lib/util.js";
-      const fábrica = FábricaMóvil.instancia(muestraError, muestraEntrada);
+      const idDisp = prompt("Identificador del Dispositivo", "iot1");
+      const fábrica =
+        FábricaMóvil.instancia(idDisp, muestraError, muestraEntrada);
       const ctrlMóvil = fábrica.ctrlMóvil;
       ctSalida.addEventListener("click", modificaSalida);
+      ctDispositivo.value = idDisp;
       setup();
       async function setup() {
         try {

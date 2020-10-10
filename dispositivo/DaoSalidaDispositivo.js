@@ -11,7 +11,9 @@ export class DaoSalidaDispositivo {
     if (resp.ok) {
       const json = await resp.json();
       const valor = json.fields.VALOR && json.fields.VALOR.integerValue;
-      return valor || "0";
+      return valor;
+    } else if (resp.status === 404) {
+      return null;
     } else {
       throw new Error(resp.statusText);
     }

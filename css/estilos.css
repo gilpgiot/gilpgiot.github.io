@@ -8,7 +8,9 @@ body {
   text-align: start;
 }
 
-p>label>meter {
+p>label>meter,
+p>label>input[type=range],
+p>label>output {
   display: block;
 }
 

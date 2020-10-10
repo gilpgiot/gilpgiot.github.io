@@ -8,7 +8,7 @@ export class DaoHistorialMóvil {
   }
   /** @returns {Promise<InfoHistorial[]>} */
   async consulta() {
-    const querySnapshot = await this._colección.get();
+    const querySnapshot = await this._colección.orderBy("HIST_TS").get();
     return paraTodos(querySnapshot, doc => this._cargaHistorial(doc));
   }
   _cargaHistorial(doc) {

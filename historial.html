@@ -28,7 +28,7 @@
     </div>
     <script type="module">
       import { FábricaMóvil } from "/js/FabricaMovil.js";
-      import { muestraError } from "/lib/util.js";
+      import { muestraError, cod } from "/lib/util.js";
       const fábrica =
         Object.freeze(new FábricaMóvil(null, null, null, muestraError));
       const ctrlHistorial = fábrica.ctrlHistorial;
@@ -38,10 +38,10 @@
           const registros = await ctrlHistorial.consultaHistorial();
           tbody.innerHTML = registros.map(h => /* html */
             `<tr>
-              <td>${h.id}</td>
-              <td>${h.dispositivo}</td>
-              <td>${h.valor}</td>
-              <td>${h.timestamp}</td>
+              <td>${cod(h.id)}</td>
+              <td>${cod(h.dispositivo)}</td>
+              <td>${cod(h.valor)}</td>
+              <td>${cod(h.timestamp)}</td>
             </tr>`).join("");
         } catch (error) {
           muestraError(error);

@@ -1,8 +1,6 @@
 import { DaoEntradaDispositivo } from "./DaoEntradaDispositivo.js";
 import { DaoHistorialDispositivo } from "./DaoHistorialDispositivo.js";
 import { DaoSalidaDispositivo } from "./DaoSalidaDispositivo.js";
-import { espera } from "./utilIoT.js";
-const INTERVALO_EN_MILIS = 1000;
 
 export class CtrlDispositivo {
   /**
@@ -35,7 +33,6 @@ export class CtrlDispositivo {
   async loop() {
     await this._muestraLaSalidaDelServidor();
     await this._envíaLaEntrada(false);
-    await espera(INTERVALO_EN_MILIS);
   }
   async _muestraLaSalidaDelServidor() {
     try {

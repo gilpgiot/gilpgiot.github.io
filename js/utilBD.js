@@ -1,4 +1,3 @@
-
 /** @param {{ exists: boolean; data: () => any; id: any; }} doc
  * @returns {number}
  */

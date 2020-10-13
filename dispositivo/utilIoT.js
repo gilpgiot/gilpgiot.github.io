@@ -36,9 +36,3 @@ export function urlDeColección(proyecto, colección) {
 export function urlDeDocumento(proyecto, colección, id) {
   return `${urlDeColección(proyecto, colección)}/${id}`;
 }
-/** @param {number} milis */
-export async function espera(milis) {
-  return new Promise(resolve => {
-    setTimeout(resolve, milis);
-  });
-}

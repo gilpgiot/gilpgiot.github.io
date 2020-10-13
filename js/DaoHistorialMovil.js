@@ -17,7 +17,7 @@ export class DaoHistorialMóvil {
       return new InfoHistorial({
         id: doc.id,
         dispositivo: data.DISP_ID,
-        timestamp: data.HIST_TS,
+        timestamp: data.HIST_TS ? data.HIST_TS.toDate().toJSON() : "",
         valor: data.VALOR
       });
     } else {

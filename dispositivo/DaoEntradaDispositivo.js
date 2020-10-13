@@ -1,4 +1,4 @@
-import { InfoValor } from "../js/InfoValor.js";
+import { valida } from "../lib/util.js";
 import { envíaJson, MÉTODO_CAMBIOS } from "./utilIoT.js";
 
 export class DaoEntradaDispositivo {
@@ -7,13 +7,14 @@ export class DaoEntradaDispositivo {
     this._url = url;
   }
   /**
-   * @param {InfoValor} modelo
+   * @param {number} valor
    * @returns {Promise<void>}
    */
-  async modifica(modelo) {
-    modelo.valida();
-    const valor = { fields: { VALOR: { integerValue: modelo.valor } } };
-    const json = JSON.stringify(valor);
+  async modifica(valor) {
+    valida(valor !== null && valor !== undefined && !isNaN(valor),
+      "Falta el valor de la entrada.");
+    const infoEntrada = { fields: { VALOR: { integerValue: valor } } };
+    const json = JSON.stringify(infoEntrada);
     await envíaJson(this._url, MÉTODO_CAMBIOS, json);
   }
 }

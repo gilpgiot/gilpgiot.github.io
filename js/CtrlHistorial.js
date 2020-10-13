@@ -1,7 +1,4 @@
-import { DaoEntradaMóvil } from "./DaoEntradaMovil.js";
 import { DaoHistorialMóvil } from "./DaoHistorialMovil.js";
-import { DaoSalidaMóvil } from "./DaoSalidaMovil.js";
-import { InfoValor } from "./InfoValor.js";
 
 export class CtrlHistorial {
   /** @param {DaoHistorialMóvil} daoHistorial */

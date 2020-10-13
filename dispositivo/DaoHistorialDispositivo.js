@@ -1,21 +1,27 @@
-import { InfoHistorial } from "../js/InfoHistorial.js";
-import { envíaJson, MÉTODO_AGREGA } from "./utilIoT.js";
+import { valida } from "../lib/util.js";
+import { envíaJson, getTimestamp, MÉTODO_AGREGA } from "./utilIoT.js";
 
 export class DaoHistorialDispositivo {
-  /** @param {string} url */
-  constructor(url) {
+  /** 
+   * @param {string} idDisp
+   * @param {string} url */
+  constructor(idDisp,url) {
+    this._idDisp = idDisp;
     this._url = url;
   }
   /**
-   * @param {InfoHistorial} modelo
+   * @param {number} valor
    * @returns {Promise<void>}
    */
-  async agrega(modelo) {
+  async agrega(valor) {
+    valida(valor !== null && valor !== undefined && !isNaN(valor),
+      "Falta el valor de la entrada.");
+    const timestamp = getTimestamp();
     const historial = {
       fields: {
-        DISP_ID: { stringValue: modelo.dispositivo },
-        HIST_TS: { timestampValue: modelo.timestamp },
-        VALOR: { integerValue: modelo.valor }
+        DISP_ID: { stringValue: this._idDisp },
+        HIST_TS: { timestampValue: timestamp },
+        VALOR: { integerValue: valor }
       }
     };
     const json = JSON.stringify(historial);

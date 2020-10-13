@@ -1,11 +1,12 @@
-import { InfoValor } from "./InfoValor.js";
 
-/** @param {{ exists: boolean; data: () => any; id: any; }} doc */
-export function leeInfoValor(doc) {
+/** @param {{ exists: boolean; data: () => any; id: any; }} doc
+ * @returns {number}
+ */
+export function leeValor(doc) {
   if (doc.exists) {
     const data = doc.data();
-    return new InfoValor({ id: doc.id, valor: data.VALOR || 0 });
+    return data.VALOR || 0;
   } else {
-    return null;
+    return 0;
   }
 }

@@ -1,22 +1,24 @@
-import { InfoValor } from "./InfoValor.js";
-import { leeInfoValor } from "./utilBD.js";
+import { leeValor } from "./utilBD.js";
 
 export class DaoEntradaMóvil {
-  /** @param {{collection: (col: string) => any; }} firestore */
-  constructor(firestore) {
+  /**
+   * @param {{collection: (col: string) => any;}} firestore
+   * @param {string} idDisp
+   */
+  constructor(firestore, idDisp) {
     this._colección = firestore.collection("ENTRADA");
+    this._idDisp = idDisp;
   }
-  /** @param {string} idDisp
-   * @param {(error: Error) => void} callbackError
-   * @param {(modelo: InfoValor) => void} callback */
-  lee(idDisp, callbackError, callback) {
-    /* Pide todos los documentos de la colección "PRIVILEGIO". */
-    this._colección.doc(idDisp).onSnapshot(
-      docSnapshot => callback(leeInfoValor(docSnapshot)),
+  /** @param {(error: Error) => void} callbackError
+   * @param {(valor: number) => void} callback */
+  lee(callbackError, callback) {
+    /* Pide el documento correspondiente de "ENTRADA". */
+    this._colección.doc(this._idDisp).onSnapshot(
+      docSnapshot => callback(leeValor(docSnapshot)),
       /** @param {Error} error */
       error => {
         callbackError(error);
-        this.lee(idDisp, callbackError, callback);
+        this.lee(callbackError, callback);
       }
     );
   }

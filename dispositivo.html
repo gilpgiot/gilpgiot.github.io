@@ -56,8 +56,8 @@
         iotError.value = error.message;
       }
       const idDisp = prompt("Identificador del Dispositivo", "iot1");
-      const fábrica = FábricaDispositivo.instancia(idDisp, sondeaSalida,
-        muestraSalida, recuperaEntrada, muestraError);
+      const fábrica = Object.freeze(new FábricaDispositivo(idDisp,
+        sondeaSalida, muestraSalida, recuperaEntrada, muestraError));
       const ctrlDispositivo = fábrica.ctrlDispositivo;
       ctDispositivo.value = idDisp;
       async function setup() {
@@ -65,11 +65,11 @@
       }
       async function loop() {
         await ctrlDispositivo.loop();
+        await espera(INTERVALO_EN_MILIS);
       }
       async function programa() {
         await setup();
         for (; ;) {
-          await espera(INTERVALO_EN_MILIS);
           await loop();
         }
       }

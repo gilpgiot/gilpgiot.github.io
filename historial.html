@@ -16,6 +16,7 @@
     <table>
       <thead>
         <tr>
+          <th>id</th>
           <th>Dispositivo</th>
           <th>Valor</th>
           <th>Timestamp</th>
@@ -34,9 +35,10 @@
           const registros = await ctrlHistorial.consultaHistorial();
           tbody.innerHTML = registros.map(h => /* html */
             `<tr>
+              <td>${h.id}</td>
               <td>${h.dispositivo}</td>
               <td>${h.valor}</td>
-              <td>${h.timestamp.toDate().toJSON()}</td>
+              <td>${h.timestamp}</td>
             </tr>`).join("");
         } catch (error) {
           muestraError(error);

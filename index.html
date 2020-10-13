@@ -36,36 +36,24 @@
     </div>
     <script type="module">
       import { FábricaMóvil } from "/js/FabricaMovil.js";
-      import { InfoValor } from "/js/InfoValor.js";
       import { muestraError } from "/lib/util.js";
       const idDisp = prompt("Identificador del Dispositivo", "iot1");
-      const fábrica =
-        FábricaMóvil.instancia(idDisp, muestraError, muestraEntrada);
-      const ctrlMóvil = fábrica.ctrlMóvil;
-      ctSalida.addEventListener("click", modificaSalida);
-      ctDispositivo.value = idDisp;
-      setup();
-      async function setup() {
-        try {
-          const valorSalida = await ctrlMóvil.setup();
-          ctSalida.checked = Boolean(valorSalida && valorSalida.valor);
-        } catch (error) {
-          muestraError(error);
+      if (idDisp) {
+        const fábrica = Object.freeze(new FábricaMóvil(idDisp, muestraEntrada,
+          muestraSalida, muestraError));
+        const ctrlMóvil = fábrica.ctrlMóvil;
+        ctSalida.addEventListener("click", modificaSalida);
+        ctDispositivo.value = idDisp;
+        ctrlMóvil.setup();
+        function muestraEntrada(valor) {
+          ctEntrada.value = valor;
         }
-      }
-      function muestraEntrada(infoValor) {
-        if (infoValor) {
-          ctEntrada.value = infoValor.valor;
-        } else {
-          ctEntrada.value = 0;
+        function muestraSalida(valor) {
+          ctSalida.checked = Boolean(valor);
         }
-      }
-      async function modificaSalida() {
-        try {
+        function modificaSalida() {
           const valor = ctSalida.checked ? 1 : 0;
-          await ctrlMóvil.modificaSalida(valor);
-        } catch (error) {
-          muestraError(error);
+          ctrlMóvil.modificaSalida(valor);
         }
       }
     </script>

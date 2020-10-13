@@ -1,5 +1,5 @@
 import { InfoHistorial } from "../js/InfoHistorial.js";
-import { InfoValor } from "../js/InfoValor.js";
+import { valida } from "../lib/util.js";
 import { DaoEntradaDispositivo } from "./DaoEntradaDispositivo.js";
 import { DaoHistorialDispositivo } from "./DaoHistorialDispositivo.js";
 import { DaoSalidaDispositivo } from "./DaoSalidaDispositivo.js";
@@ -55,15 +55,8 @@ export class CtrlDispositivo {
     try {
       const nuevaEntrada = this._recuperaEntrada();
       if (forzosa || this._entrada != nuevaEntrada) {
-        const valor = new InfoValor({ id: this._idDisp, valor: nuevaEntrada });
-        const historial = new InfoHistorial({
-          id: null,
-          dispositivo: this._idDisp,
-          timestamp: getTimestamp(),
-          valor: nuevaEntrada
-        });
-        this._daoEntrada.modifica(valor);
-        this._daoHistorial.agrega(historial);
+        this._daoEntrada.modifica(nuevaEntrada);
+        this._daoHistorial.agrega(nuevaEntrada);
         this._entrada = nuevaEntrada;
       }
     } catch (e) {

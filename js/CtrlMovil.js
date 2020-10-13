@@ -1,29 +1,38 @@
 import { DaoEntradaMóvil } from "./DaoEntradaMovil.js";
 import { DaoSalidaMóvil } from "./DaoSalidaMovil.js";
-import { InfoValor } from "./InfoValor.js";
 
 export class CtrlMóvil {
   /** @param {string} idDisp
-   * @param {(error: Error) => void} callbackError
-   * @param {(modelo: InfoValor) => void} callbackEntrada
+   * @param {(valor: number) => void} muestraEntrada
+   * @param {(valor: number) => void} muestraSalida
+   * @param {(error: Error) => void} muestraError
    * @param {DaoEntradaMóvil} daoEntrada
    * @param {DaoSalidaMóvil} daoSalida
-   *  */
-  constructor(idDisp, callbackError, callbackEntrada, daoEntrada, daoSalida) {
+   */
+  constructor(idDisp, muestraEntrada, muestraSalida, muestraError, daoEntrada,
+    daoSalida) {
     this._idDisp = idDisp;
-    this._callbackError = callbackError;
-    this._callbackEntrada = callbackEntrada;
+    this._muestraSalida = muestraSalida;
+    this._muestraEntrada = muestraEntrada;
+    this._muestraError = muestraError;
     this._daoEntrada = daoEntrada;
     this._daoSalida = daoSalida;
   }
   async setup() {
-    this._daoEntrada
-      .lee(this._idDisp, this._callbackError, this._callbackEntrada);
-    return this._daoSalida.busca(this._idDisp);
+    try {
+      this._daoEntrada.lee(this._muestraError, this._muestraEntrada);
+      const salida = await this._daoSalida.busca();
+      this._muestraSalida(salida);
+    } catch (error) {
+      this._muestraError(error);      
+    }
   }
   /** @param {number} valor */
   async modificaSalida(valor) {
-    const modelo = new InfoValor({ id: this._idDisp, valor });
-    await this._daoSalida.modifica(modelo);
+    try {
+      await this._daoSalida.modifica(valor);      
+    } catch (error) {
+      this._muestraError(error);      
+    }
   }
 }

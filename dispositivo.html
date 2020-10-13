@@ -40,8 +40,6 @@
     </div>
     <script type="module">
       import { FábricaDispositivo } from "/dispositivo/FabricaDispositivo.js";
-      import { espera } from "/dispositivo/utilIoT.js";
-      const INTERVALO_EN_MILIS = 1000;
       function sondeaSalida() {
         return ctSondeaSalida.checked;
       }
@@ -65,7 +63,6 @@
       }
       async function loop() {
         await ctrlDispositivo.loop();
-        await espera(INTERVALO_EN_MILIS);
       }
       async function programa() {
         await setup();

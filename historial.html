@@ -13,21 +13,24 @@
     <script type="module" src="cmp/mi-footer.js"></script>
   </head>
   <body>
-    <table>
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>Dispositivo</th>
-          <th>Valor</th>
-          <th>Timestamp</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+    <div class="contenido">
+      <table>
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>Dispositivo</th>
+            <th>Valor</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
     <script type="module">
       import { FábricaMóvil } from "/js/FabricaMovil.js";
       import { muestraError } from "/lib/util.js";
-      const fábrica = FábricaMóvil.instancia(null, null);
+      const fábrica =
+        Object.freeze(new FábricaMóvil(null, null, null, muestraError));
       const ctrlHistorial = fábrica.ctrlHistorial;
       setup();
       async function setup() {

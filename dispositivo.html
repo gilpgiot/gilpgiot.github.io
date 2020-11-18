@@ -63,13 +63,14 @@
       }
       async function loop() {
         await ctrlDispositivo.loop();
-        setTimeout(async () => {
-          await loop();
-        }, 1000);
       }
       async function programa() {
         await setup();
+        await repiteLoop();
+      }
+       async function repiteLoop() {
         await loop();
+        setTimeout(repiteLoop, 1000);
       }
       programa();
     </script>

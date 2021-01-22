@@ -39,40 +39,79 @@
       <mi-footer></mi-footer>
     </div>
     <script type="module">
-      import { FábricaDispositivo } from "/dispositivo/FabricaDispositivo.js";
+      import { urlDeDocumento, urlDeColección } from "./dispositivo/utilIoT.js";
+      import { ProxySalida } from "./dispositivo/ProxySalida.js";
+      import { ProxyEntrada } from "./dispositivo/ProxyEntrada.js";
+      import { ProxyHistorial } from "./dispositivo/ProxyHistorial.js";
+      const dispositivoId = prompt("Identificador del Dispositivo", "iot1");
+      const URL_SALIDA = urlDeDocumento(ID_PROYECTO, "Salida", dispositivoId);
+      const URL_ENTRADA = urlDeDocumento(ID_PROYECTO, "Entrada", dispositivoId);
+      const URL_HISTORIAL = urlDeColección(ID_PROYECTO, "Historial");
+      let entrada = 0;
+      let proxySalida = new ProxySalida(URL_SALIDA);
+      let proxyEntrada = new ProxyEntrada(URL_ENTRADA);
+      let proxyHistorial = new ProxyHistorial(URL_HISTORIAL);
+      if (dispositivoId) {
+        programa();
+      }
+      async function setup() {
+        await muestraLaSalidaDelServidor();
+        await envíaLaEntrada(true);
+      }
+      async function loop() {
+        await muestraLaSalidaDelServidor();
+        await envíaLaEntrada(false);
+      }
+      async function muestraLaSalidaDelServidor() {
+        if (sondeaSalida()) {
+          const resultado = await proxySalida.get();
+          if (resultado.error.length > 0) {
+            muestraError(resultado.error);
+          } else {
+            muestraSalida(resultado.valor);
+          }
+        }
+      }
+      /** @param {boolean} forzosa */
+      async function envíaLaEntrada(forzosa) {
+        const nuevaEntrada = recuperaEntrada();
+        if (forzosa || entrada != nuevaEntrada) {
+          let error = proxyEntrada.set(nuevaEntrada);
+          if (error.length > 0) {
+            muestraError(error);
+            return;
+          }
+          error = proxyHistorial.add(nuevaEntrada);
+          if (error.length > 0) {
+            muestraError(error);
+            return;
+          }
+          entrada = nuevaEntrada;
+        }
+      }
       function sondeaSalida() {
         return ctSondeaSalida.checked;
       }
+      /** @param {number} valor */
       function muestraSalida(valor) {
-        ctSalida.value = valor || "0";
+        ctSalida.value = valor || 0;
       }
       function recuperaEntrada() {
         return ctEntrada.valueAsNumber;
       }
-      function muestraError(error) {
-        console.error(error);
-        iotError.value = error.message;
-      }
-      const idDisp = prompt("Identificador del Dispositivo", "iot1");
-      const fábrica = Object.freeze(new FábricaDispositivo(idDisp,
-        sondeaSalida, muestraSalida, recuperaEntrada, muestraError));
-      const ctrlDispositivo = fábrica.ctrlDispositivo;
-      ctDispositivo.value = idDisp;
-      async function setup() {
-        await ctrlDispositivo.setup();
-      }
-      async function loop() {
-        await ctrlDispositivo.loop();
+      /** @param {string} mensaje */
+      function muestraError(mensaje) {
+        console.error(mensaje);
+        iotError.value = mensaje;
       }
       async function programa() {
         await setup();
         await repiteLoop();
       }
-       async function repiteLoop() {
+      async function repiteLoop() {
         await loop();
         setTimeout(repiteLoop, 1000);
       }
-      programa();
     </script>
   </body>
 </html>

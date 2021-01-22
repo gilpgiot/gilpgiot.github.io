@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial IoT</title>
     <script
-      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+      src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
     <script
-      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-firestore.js"></script>
-    <script src="js/init.js"></script>
-    <link href="css/estilos.css" rel="stylesheet">
+      src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
+      <script src="js/init.js"></script>
+      <link href="css/estilos.css" rel="stylesheet">
     <script type="module" src="cmp/mi-footer.js"></script>
   </head>
   <body>
@@ -18,33 +18,36 @@
         <thead>
           <tr>
             <th>id</th>
-            <th>Dispositivo</th>
-            <th>Valor</th>
-            <th>Timestamp</th>
+            <th>dispositivoId</th>
+            <th>valor</th>
+            <th>timestamp</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
     </div>
     <script type="module">
-      import { FábricaMóvil } from "/js/FabricaMovil.js";
-      import { muestraError, cod } from "/lib/util.js";
-      const fábrica =
-        Object.freeze(new FábricaMóvil(null, null, null, muestraError));
-      const ctrlHistorial = fábrica.ctrlHistorial;
-      setup();
-      async function setup() {
+      import { muestraError, cod } from "./js/util.js";
+      const firestore = firebase.firestore();
+      renderHistorial();
+      async function renderHistorial() {
         try {
-          const registros = await ctrlHistorial.consultaHistorial();
-          tbody.innerHTML = registros.map(h => /* html */
-            `<tr>
-              <td>${cod(h.id)}</td>
-              <td>${cod(h.dispositivo)}</td>
-              <td>${cod(h.valor)}</td>
-              <td>${cod(h.timestamp)}</td>
-            </tr>`).join("");
-        } catch (error) {
-          muestraError(error);
+          let html = "";
+          const querySnapshot =
+            await firestore.collection("Historial").orderBy("timestamp").get();
+          querySnapshot.forEach(doc => {
+            const data = doc.data();
+            html += /* html */
+              `<tr>
+                <td>${cod(doc.id)}</td>
+                <td>${cod(data.dispositivoId)}</td>
+                <td>${cod(data.valor)}</td>
+                <td>${cod(data.timestamp)}</td>
+              </tr>`;
+          });
+          tbody.innerHTML = html;
+        } catch (e) {
+          muestraError(e);
         }
       }
     </script>

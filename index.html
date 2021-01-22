@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control IoT</title>
     <script
-      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+      src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
     <script
-      src="https://www.gstatic.com/firebasejs/7.21.1/firebase-firestore.js"></script>
+      src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
     <script src="js/init.js"></script>
     <link href="css/estilos.css" rel="stylesheet">
     <script type="module" src="cmp/mi-footer.js"></script>
@@ -35,26 +35,50 @@
       <mi-footer></mi-footer>
     </div>
     <script type="module">
-      import { FábricaMóvil } from "/js/FabricaMovil.js";
-      import { muestraError } from "/lib/util.js";
-      const idDisp = prompt("Identificador del Dispositivo", "iot1");
-      if (idDisp) {
-        const fábrica = Object.freeze(new FábricaMóvil(idDisp, muestraEntrada,
-          muestraSalida, muestraError));
-        const ctrlMóvil = fábrica.ctrlMóvil;
+      import { muestraError } from "./js/util.js";
+      const firestore = firebase.firestore();
+      const colSalida = firestore.collection("Salida");
+      const colEntrada = firestore.collection("Entrada");
+      const dispositivoId = prompt("Identificador del Dispositivo", "iot1");
+      if (dispositivoId) {
         ctSalida.addEventListener("click", modificaSalida);
-        ctDispositivo.value = idDisp;
-        ctrlMóvil.setup();
-        function muestraEntrada(valor) {
-          ctEntrada.value = valor;
+        setup();
+      }
+      async function setup() {
+        try {
+          escuchaEntrada();
+          leeSalida();
+        } catch (e) {
+          muestraError(e);
         }
-        function muestraSalida(valor) {
-          ctSalida.checked = Boolean(valor);
+      }
+      async function leeSalida() {
+        const salidaDoc = await colSalida.doc(dispositivoId).get();
+        if (salidaDoc.exists) {
+          const data = salidaDoc.data();
+          ctSalida.checked = Boolean(data.valor);
         }
-        function modificaSalida() {
+      }
+      async function modificaSalida() {
+        try {
           const valor = ctSalida.checked ? 1 : 0;
-          ctrlMóvil.modificaSalida(valor);
+          await colSalida.doc(dispositivoId).set({ valor });
+        } catch (e) {
+          muestraError(e);
         }
+      }
+      function escuchaEntrada() {
+        colEntrada.doc(dispositivoId).onSnapshot(
+          entradaDoc => {
+            if (entradaDoc.exists) {
+              const data = salidaDoc.data();
+              ctEntrada.value = data.valor || 0;
+            }
+          },
+          e => {
+            muestraError(e);
+            escuchaEntrada();
+          });
       }
     </script>
   </body>

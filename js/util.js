@@ -1,29 +1,8 @@
-/** @param {any} expresión
- * @param {string} mensaje */
-export function valida(expresión, mensaje) {
-  if (!expresión) {
-    throw new Error(mensaje);
-  }
-}
-
-/** @param {string} s */
-export function trims(s) {
-  return s ? s.trim() : "";
-}
-
-/** @param {{forEach:(doc:Object)=>void}} usaForEach
- * @param {(doc: Object) => Object} función */
-export function paraTodos(usaForEach, función) {
-  const arr = [];
-  usaForEach.forEach(doc => arr.push(función(doc)));
-  return arr;
-}
-
 /** Muestra un error en la consola y un cuadro de alerta con el mensaje.
- * @param {Error} error descripción del error. */
-export function muestraError(error) {
-  console.log(error);
-  alert(error.message);
+ * @param {Error} e descripción del error. */
+export function muestraError(e) {
+  console.error(e);
+  alert(e.message);
 }
 
 /** Codifica un texto para que escape los caracteres especiales y no se

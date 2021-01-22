@@ -1,21 +1,4 @@
-const HEADERS_JSON = { "Content-Type": "application/json" };
-export const MÉTODO_AGREGA = "POST";
-export const MÉTODO_CAMBIOS = "PATCH";
-/**
- * @param {string} url
- * @param {string} método
- * @param {string} json
- */
-export async function envíaJson(url, método, json) {
-  const resp = await fetch(url, {
-    method: método,
-    body: json,
-    headers: HEADERS_JSON,
-  });
-  if (!resp.ok) {
-    throw new Error(resp.statusText);
-  }
-}
+export const HEADERS_JSON = { "Content-Type": "application/json" };
 export function getTimestamp() {
   const date = new Date();
   return date.toJSON();

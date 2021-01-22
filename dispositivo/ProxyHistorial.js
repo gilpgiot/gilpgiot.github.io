@@ -2,10 +2,13 @@ import { getTimestamp, HEADERS_JSON } from "./utilIoT.js";
 
 /** Clase para conectarse a la base de datos. */
 export class ProxyHistorial {
+  /** @param {string} dispositivoId id del dispositivo. */
   /** @param {string} url URL del servidor. */
-  constructor(url) {
+  constructor(dispositivoId, url) {
     /** @private */
     this._url = url;
+    /** @private */
+    this._dispositivoId = dispositivoId;
   }
   /**
    * @param {number} valor
@@ -35,7 +38,7 @@ export class ProxyHistorial {
     const timestamp = getTimestamp();
     const estructura = {
       fields: {
-        dispositivoId: { stringValue: dispositivoId },
+        dispositivoId: { stringValue: this._dispositivoId },
         valor: { integerValue: valor },
         timestamp: { timestampValue: timestamp }
       }

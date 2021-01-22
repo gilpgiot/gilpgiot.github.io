@@ -44,6 +44,7 @@
       import { ProxyEntrada } from "./dispositivo/ProxyEntrada.js";
       import { ProxyHistorial } from "./dispositivo/ProxyHistorial.js";
       const dispositivoId = prompt("Identificador del Dispositivo", "iot1");
+      const ID_PROYECTO = "gilpgiotx";
       const URL_SALIDA = urlDeDocumento(ID_PROYECTO, "Salida", dispositivoId);
       const URL_ENTRADA = urlDeDocumento(ID_PROYECTO, "Entrada", dispositivoId);
       const URL_HISTORIAL = urlDeColección(ID_PROYECTO, "Historial");

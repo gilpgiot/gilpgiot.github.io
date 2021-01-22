@@ -77,12 +77,12 @@
       async function envíaLaEntrada(forzosa) {
         const nuevaEntrada = recuperaEntrada();
         if (forzosa || entrada != nuevaEntrada) {
-          let error = proxyEntrada.set(nuevaEntrada);
+          let error = await proxyEntrada.set(nuevaEntrada);
           if (error.length > 0) {
             muestraError(error);
             return;
           }
-          error = proxyHistorial.add(nuevaEntrada);
+          error = await proxyHistorial.add(nuevaEntrada);
           if (error.length > 0) {
             muestraError(error);
             return;

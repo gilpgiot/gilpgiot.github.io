@@ -44,12 +44,13 @@
       const dispositivoId = prompt("Identificador del Dispositivo", "iot1");
       if (dispositivoId) {
         ctSalida.addEventListener("click", modificaSalida);
+        ctDispositivo.value = dispositivoId;
         setup();
       }
       async function setup() {
         try {
           escuchaEntrada();
-          leeSalida();
+          await leeSalida();
         } catch (e) {
           muestraError(e);
         }

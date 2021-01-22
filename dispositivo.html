@@ -51,7 +51,7 @@
       let entrada = 0;
       let proxySalida = new ProxySalida(URL_SALIDA);
       let proxyEntrada = new ProxyEntrada(URL_ENTRADA);
-      let proxyHistorial = new ProxyHistorial(URL_HISTORIAL);
+      let proxyHistorial = new ProxyHistorial(dispositivoId, URL_HISTORIAL);
       if (dispositivoId) {
         programa();
       }

@@ -6,9 +6,9 @@ export class ProxyHistorial {
   /** @param {string} url URL del servidor. */
   constructor(dispositivoId, url) {
     /** @private */
-    this._url = url;
-    /** @private */
     this._dispositivoId = dispositivoId;
+    /** @private */
+    this._url = url;
   }
   /**
    * @param {number} valor

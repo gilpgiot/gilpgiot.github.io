@@ -71,7 +71,7 @@
         colEntrada.doc(dispositivoId).onSnapshot(
           entradaDoc => {
             if (entradaDoc.exists) {
-              const data = salidaDoc.data();
+              const data = entradaDoc.data();
               ctEntrada.value = data.valor || 0;
             }
           },

@@ -10,8 +10,7 @@ export function muestraError(e) {
  * @param {string} texto
  * @returns {string} un texto que no puede interpretarse como HTML. */
 export function cod(texto) {
-  return (texto || "").toString()
-    .replace(/[<>"']/g,
+  return (texto || "").replace(/[<>"']/g,
       /** @param {string} letra */
       letra => {
         switch (letra) {

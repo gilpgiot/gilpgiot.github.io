@@ -41,8 +41,8 @@
               `<tr>
                 <td>${cod(doc.id)}</td>
                 <td>${cod(data.dispositivoId)}</td>
-                <td>${cod(data.valor)}</td>
-                <td>${cod(data.timestamp)}</td>
+                <td>${cod(data.valor.toString())}</td>
+                <td>${cod(data.timestamp.toString())}</td>
               </tr>`;
           });
           tbody.innerHTML = html;

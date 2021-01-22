@@ -13,7 +13,7 @@ export class ProxyHistorial {
   async add(valor) {
     try {
       const json = this._creaJson(valor);
-      const respuesta = await fetch(this.url, {
+      const respuesta = await fetch(this._url, {
         method: "POST",
         body: json,
         headers: HEADERS_JSON,

@@ -13,7 +13,7 @@ export class ProxyEntrada {
   async set(valor) {
     try {
       const json = this._creaJson(valor);
-      const respuesta = await fetch(this.url, {
+      const respuesta = await fetch(this._url, {
         method: "PATCH",
         body: json,
         headers: HEADERS_JSON,

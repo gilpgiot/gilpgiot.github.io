@@ -52,8 +52,24 @@
       let proxySalida = new ProxySalida(URL_SALIDA);
       let proxyEntrada = new ProxyEntrada(URL_ENTRADA);
       let proxyHistorial = new ProxyHistorial(dispositivoId, URL_HISTORIAL);
+      
       if (dispositivoId) {
         programa();
+      }
+      function sondeaSalida() {
+        return ctSondeaSalida.checked;
+      }
+      /** @param {number} valor */
+      function muestraSalida(valor) {
+        ctSalida.value = valor || 0;
+      }
+      function recuperaEntrada() {
+        return ctEntrada.valueAsNumber;
+      }
+      /** @param {string} mensaje */
+      function muestraError(mensaje) {
+        console.error(mensaje);
+        iotError.value = mensaje;
       }
       async function setup() {
         await muestraLaSalidaDelServidor();
@@ -89,21 +105,6 @@
           }
           entrada = nuevaEntrada;
         }
-      }
-      function sondeaSalida() {
-        return ctSondeaSalida.checked;
-      }
-      /** @param {number} valor */
-      function muestraSalida(valor) {
-        ctSalida.value = valor || 0;
-      }
-      function recuperaEntrada() {
-        return ctEntrada.valueAsNumber;
-      }
-      /** @param {string} mensaje */
-      function muestraError(mensaje) {
-        console.error(mensaje);
-        iotError.value = mensaje;
       }
       async function programa() {
         await setup();

@@ -2,87 +2,63 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0">
     <title>Control IoT</title>
     <script
       src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
     <script
       src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
-    <script src="js/init.js"></script>
-    <link href="css/estilos.css" rel="stylesheet">
-    <script type="module" src="cmp/mi-footer.js"></script>
+    <script src="js/init.js">
+    </script>
+    <link href="css/estilos.css"
+      rel="stylesheet">
+    <script type="module"
+      src="cmp/mi-footer.js">
+      </script>
   </head>
   <body>
     <div class="contenido">
       <h1>Control IoT</h1>
       <p>
-        <a href="dispositivo.html" target="_blank">Ver dispositivo simulado.</a>
+        <a href="dispositivo.html"
+          target="_blank">Ver
+          dispositivo
+          simulado.</a>
       </p>
-      <p><a href="historial.html" target="_blank">Ver historial.</a></p>
+      <p>
+        <a href="historial.html"
+          target="_blank">Ver
+          historial.</a>
+      </p>
       <p>
         <label>
           Dispositivo
-          <output id="ctDispositivo"></output>
+          <output
+            id="ctDispositivo">
+          </output>
         </label>
       </p>
       <p>
         <label>
           Entrada
-          <meter id=ctEntrada min="0" max="10"></meter>
+          <meter id="ctEntrada"
+            min="0" max="10">
+          </meter>
         </label>
       </p>
       <p>
-        <label><input id=ctSalida type="checkbox"> Salida</label>
+        <label>
+          <input id=ctSalida
+            type="checkbox">
+          Salida
+        </label>
       </p>
       <mi-footer></mi-footer>
     </div>
-    <script type="module">
-      import { muestraError } from "./js/util.js";
-      const firestore = firebase.firestore();
-      const colSalida = firestore.collection("Salida");
-      const colEntrada = firestore.collection("Entrada");
-      const dispositivoId = prompt("Identificador del Dispositivo", "iot1");
-      if (dispositivoId) {
-        ctSalida.addEventListener("click", modificaSalida);
-        ctDispositivo.value = dispositivoId;
-        setup();
-      }
-      async function setup() {
-        try {
-          escuchaEntrada();
-          await leeSalida();
-        } catch (e) {
-          muestraError(e);
-        }
-      }
-      async function leeSalida() {
-        const salidaDoc = await colSalida.doc(dispositivoId).get();
-        if (salidaDoc.exists) {
-          const data = salidaDoc.data();
-          ctSalida.checked = Boolean(data.valor);
-        }
-      }
-      async function modificaSalida() {
-        try {
-          const valor = ctSalida.checked ? 1 : 0;
-          await colSalida.doc(dispositivoId).set({ valor });
-        } catch (e) {
-          muestraError(e);
-        }
-      }
-      function escuchaEntrada() {
-        colEntrada.doc(dispositivoId).onSnapshot(
-          entradaDoc => {
-            if (entradaDoc.exists) {
-              const data = entradaDoc.data();
-              ctEntrada.value = data.valor || 0;
-            }
-          },
-          e => {
-            muestraError(e);
-            escuchaEntrada();
-          });
-      }
-    </script>
+    <script type="module"
+      src="js/CtrlMovil.js">
+      </script>
   </body>
 </html>

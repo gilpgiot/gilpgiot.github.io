@@ -8,8 +8,8 @@
       src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
     <script
       src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
-      <script src="js/init.js"></script>
-      <link href="css/estilos.css" rel="stylesheet">
+    <script src="js/init.js"></script>
+    <link href="css/estilos.css" rel="stylesheet">
     <script type="module" src="cmp/mi-footer.js"></script>
   </head>
   <body>
@@ -23,33 +23,11 @@
             <th>timestamp</th>
           </tr>
         </thead>
-        <tbody id="tbody"></tbody>
+        <tbody></tbody>
       </table>
     </div>
-    <script type="module">
-      import { muestraError, cod } from "./js/util.js";
-      const firestore = firebase.firestore();
-      renderHistorial();
-      async function renderHistorial() {
-        try {
-          let html = "";
-          const querySnapshot =
-            await firestore.collection("Historial").orderBy("timestamp").get();
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-            html += /* html */
-              `<tr>
-                <td>${cod(doc.id)}</td>
-                <td>${cod(data.dispositivoId)}</td>
-                <td>${cod(data.valor.toString())}</td>
-                <td>${cod(data.timestamp.toString())}</td>
-              </tr>`;
-          });
-          tbody.innerHTML = html;
-        } catch (e) {
-          muestraError(e);
-        }
-      }
-    </script>
+    <script type="module"
+      src="js/CtrlHistorial.js">
+      </script>
   </body>
 </html>

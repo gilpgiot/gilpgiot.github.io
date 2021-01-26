@@ -1,4 +1,6 @@
-/** Se utiliza para devolver un valor o un error, pues no usaremos excepciones. */
+/** Se utiliza para devolver un
+ * valor o un error, pues no
+ * usaremos excepciones. */
 export class ResInt {
   /**
    * @param {number} valor 

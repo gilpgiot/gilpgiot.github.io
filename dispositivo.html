@@ -2,119 +2,69 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulación de Dispositivo IoT</title>
-    <link href="css/estilos.css" rel="stylesheet">
-    <script type="module" src="cmp/mi-footer.js"></script>
+    <meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0">
+    <title>
+      Simulación de Dispositivo
+      IoT
+    </title>
+    <link href="css/estilos.css"
+      rel="stylesheet">
+    <script type="module"
+      src="cmp/mi-footer.js">
+      </script>
   </head>
   <body>
     <div class="contenido">
-      <h1>Simulación de Dispositivo IoT</h1>
-      <p><a href="index.html" target="_blank">Ver móvil.</a></p>
+      <h1>
+        Simulación de Dispositivo
+        IoT
+      </h1>
+      <p>
+        <a href="index.html"
+          target="_blank">
+          Ver móvil.</a>
+      </p>
       <p>
         <label>
           Dispositivo
-          <output id="ctDispositivo"></output>
+          <output
+            id="ctDispositivo">
+          </output>
         </label>
       </p>
       <p>
         <label>
           Entrada
-          <input id="ctEntrada" type="range" min="0" max="10">
+          <input id="ctEntrada"
+            type="range"
+            min="0" max="10">
         </label>
       </p>
       <p>
         <label>
-          <input id=ctSondeaSalida type="checkbox" checked>
+          <input id="ctSondea"
+            type="checkbox"
+            checked>
           Sondea Salida
         </label>
       </p>
       <p>
         <label>
           Salida
-          <output id="ctSalida"></output>
+          <output id="ctSalida">
+          </output>
         </label>
       </p>
-      <p><output id="iotError"></output></p>
+      <p>
+        <output id="iotError">
+        </output>
+      </p>
       <mi-footer></mi-footer>
     </div>
-    <script type="module">
-      import { urlDeDocumento, urlDeColección } from "./dispositivo/utilIoT.js";
-      import { ProxySalida } from "./dispositivo/ProxySalida.js";
-      import { ProxyEntrada } from "./dispositivo/ProxyEntrada.js";
-      import { ProxyHistorial } from "./dispositivo/ProxyHistorial.js";
-      const dispositivoId = prompt("Identificador del Dispositivo", "iot1");
-      const ID_PROYECTO = "gilpgiotx";
-      const URL_SALIDA = urlDeDocumento(ID_PROYECTO, "Salida", dispositivoId);
-      const URL_ENTRADA = urlDeDocumento(ID_PROYECTO, "Entrada", dispositivoId);
-      const URL_HISTORIAL = urlDeColección(ID_PROYECTO, "Historial");
-      let entrada = 0;
-      let proxySalida = new ProxySalida(URL_SALIDA);
-      let proxyEntrada = new ProxyEntrada(URL_ENTRADA);
-      let proxyHistorial = new ProxyHistorial(dispositivoId, URL_HISTORIAL);
-      
-      if (dispositivoId) {
-        ctDispositivo.value = dispositivoId;
-        programa();
-      }
-      function sondeaSalida() {
-        return ctSondeaSalida.checked;
-      }
-      /** @param {number} valor */
-      function muestraSalida(valor) {
-        ctSalida.value = valor || 0;
-      }
-      function recuperaEntrada() {
-        return ctEntrada.valueAsNumber;
-      }
-      /** @param {string} mensaje */
-      function muestraError(mensaje) {
-        console.error(mensaje);
-        iotError.value = mensaje;
-      }
-      async function setup() {
-        await muestraLaSalidaDelServidor();
-        await envíaLaEntrada(true);
-      }
-      async function loop() {
-        await muestraLaSalidaDelServidor();
-        await envíaLaEntrada(false);
-      }
-      async function muestraLaSalidaDelServidor() {
-        if (sondeaSalida()) {
-          const resultado = await proxySalida.get();
-          if (resultado.error.length > 0) {
-            muestraError(resultado.error);
-          } else {
-            muestraSalida(resultado.valor);
-          }
-        }
-      }
-      /** @param {boolean} forzosa */
-      async function envíaLaEntrada(forzosa) {
-        const nuevaEntrada = recuperaEntrada();
-        if (forzosa || entrada != nuevaEntrada) {
-          let error = await proxyEntrada.set(nuevaEntrada);
-          if (error.length > 0) {
-            muestraError(error);
-            return;
-          }
-          error = await proxyHistorial.add(nuevaEntrada);
-          if (error.length > 0) {
-            muestraError(error);
-            return;
-          }
-          entrada = nuevaEntrada;
-        }
-      }
-      async function programa() {
-        await setup();
-        await repiteLoop();
-      }
-      async function repiteLoop() {
-        await loop();
-        setTimeout(repiteLoop, 1000);
-      }
-    </script>
+    <script type="module"
+      src="disp/CtrlDispositivo.js">
+      </script>
   </body>
 </html>

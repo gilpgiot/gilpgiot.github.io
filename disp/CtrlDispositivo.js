@@ -7,7 +7,10 @@ import {
 import {
   ProxySalida
 } from "./ProxySalida.js";
-import { urlDeColección, urlDeDocumento } from "./utilIoT.js";
+import {
+  urlDeColección,
+  urlDeDocumento
+} from "./utilIoT.js";
 
 /** @type {HTMLOutputElement} */
 const ctDispositivo = document.

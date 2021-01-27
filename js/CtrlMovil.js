@@ -1,5 +1,9 @@
-import { getFirestore } from "../lib/fabrica.js";
-import { muestraError } from "../lib/util.js";
+import {
+  getFirestore
+} from "../lib/fabrica.js";
+import {
+  muestraError
+} from "../lib/util.js";
 
 /** @type {HTMLOutputElement} */
 const ctDispositivo = document.
